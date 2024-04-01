@@ -1,19 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const AuthRouter = require('./routes/auth.js')
 
-require('dotenv').config()  
+const AuthRouter = require('./routes/auth.routes.js')
+const EntriesRouter = require('./routes/entries.routes.js')
+
+require('dotenv').config()
 
 const app = express()
 const PORT = 8080 || process.env.PORT
 
-app.use(bodyParser.json({limit: '50mb', extended: true}))
+app.use(bodyParser.json({ limit: '50mb', extended: true }))
 
-app.get('/',(req,res)=>{
-    res.send('Hello World!')
-})
 app.use('/auth', AuthRouter)
+app.use('/data', EntriesRouter);
 
 
 const CONNECTION_URL = process.env.MONGODB_DATABASE_URL
