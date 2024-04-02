@@ -9,7 +9,7 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'API Documentation',
+            title: 'API Documentation for this project',
             version: '1.0.0',
             // description: 'API documentation for the application.',
         },
@@ -32,7 +32,7 @@ module.exports = app;
  * @swagger
  * components:
  *   schemas:
- *     Books:
+ *     User:
  *       type: object
  *       required:
  *         - title
@@ -41,119 +41,148 @@ module.exports = app;
  *       properties:
  *         id:
  *           type: string
- *           description: The auto-generated id of the book
- *         title:
+ *           description: The auto-generated id of the user
+ *         name:
  *           type: string
- *           description: The title of your book
- *         description:
+ *           description: name of the user
+ *         email:
  *           type: string
- *           description: The book explanation
- *         published:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         createdAt:
+ *           description: email of the user
+ *         password:
  *           type: string
- *           format: date
- *           description: The date the book was added
- *     
+ *           description: password of the user
+ *   securitySchemes:
+ *       bearerAuth:
+ *         type: apiKey
+ *         scheme: bearer
+ *         bearerFormat: JWT
+ *         description: Enter your bearer token in the format Bearer {token}
+ *         name: Authorization
+ *         in: header
  */
+
 /**
  * @swagger
- * tags:
- *   name: Books
- *   description: The books managing API
- * /book:
- *   get:
- *     summary: Lists all the books
- *     tags: [Books]
- *     responses:
- *       200:
- *         description: The list of the books
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Books'
+ * 
+ * /auth/signup:
  *   post:
- *     summary: Create a new book
- *     tags: [Books]
+ *     summary: For signup a user account
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Books'
+ *             type: object
+ *             required:
+ *               - name   
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the user
+ *               email:
+ *                 type: string
+ *                 description: The email of the user
+ *               password:
+ *                 type: string
+ *                 description: The password of the user
  *     responses:
- *       200:
- *         description: The created book.
+ *       201:
+ *         description: Account created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Books'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Message indicating successful account creation
+ *                 token:
+ *                   type: string
+ *                   description: Authentication token
  *       500:
- *         description: Some server error
- * /book/{id}:
- *   get:
- *     summary: Get the book by id
- *     tags: [Books]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The book id
+ *         description: Internal server error
+ * 
+ * /auth/signin:
+ *   post:
+ *     summary: For signin a user account
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The email of the user
+ *               password:
+ *                 type: string
+ *                 description: The password of the user
  *     responses:
  *       200:
- *         description: The book response by id
- *         contens:
+ *         description: Logged in successfully
+ *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Books'
- *       404:
- *         description: The book was not found
- *   put:
- *    summary: Update the book by the id
- *    tags: [Books]
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: string
- *        required: true
- *        description: The book id
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Books'
- *    responses:
- *      200:
- *        description: The book was updated
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Books'
- *      404:
- *        description: The book was not found
- *      500:
- *        description: Some error happened
- *   delete:
- *     summary: Remove the book by id
- *     tags: [Books]
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Message indicating successful login
+ *                 oldUser:
+ *                   type: object
+ *                   description: User details
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: The unique identifier of the user
+ *                     name:
+ *                       type: string
+ *                       description: The name of the user
+ *                     email:
+ *                       type: string
+ *                       description: The email of the user
+ *                     password:
+ *                       type: string
+ *                       description: The hashed password of the user
+ *                     __v:
+ *                       type: integer
+ *                       description: Version number of the user object
+ *                 token:
+ *                   type: string
+ *                   description: Authentication token
+ *       500:
+ *         description: Internal server error
+ * 
+ * /entries:
+ *   get:
+ *     summary: Secure API Endpoint for Authenticated Users Only. Retrieve entries from the API
+ *     tags: [Entries]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: query
+ *         name: category
  *         schema:
  *           type: string
- *         required: true
- *         description: The book id
- *
+ *         description: Filter entries by category
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Limit the number of entries
+ *     security:
+ *       - bearerAuth: [] 
  *     responses:
  *       200:
- *         description: The book was deleted
- *       404:
- *         description: The book was not found
+ *         description: Object which contain count and entries
+ *       401:
+ *         description: Unauthorized no token provided
+ *       500:
+ *         description: Internal server error
  */

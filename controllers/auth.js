@@ -23,7 +23,7 @@ const signup = async (req, res) => {
         res.status(201).json({ message: "Account created successfully.", token });
 
     } catch (error) {
-        res.status(500).json({ message: "Error creating account. Please try again later. " });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
@@ -41,7 +41,7 @@ const signin = async (req, res) => {
         res.status(200).json({ message: "Logged in successfully", oldUser, token });
 
     } catch (err) {
-        res.status(500).json({ message: "Login Not Succesfull" });
+        res.status(500).json({ message: "Internal Server error" });
     }
 };
 

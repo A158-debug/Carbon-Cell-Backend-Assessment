@@ -14,7 +14,7 @@ const PORT = 8080 || process.env.PORT
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 
 app.use('/auth', AuthRouter)
-app.use('/data', EntriesRouter);
+app.use('/entries', EntriesRouter);
 app.use('/', swaggerDocs);
 
 
