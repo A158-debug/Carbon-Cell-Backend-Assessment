@@ -13,7 +13,15 @@ const app = express()
 const PORT = 8080 || process.env.PORT
 
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
-app.use(cors({ origin: '*', credentials: true, }))
+// app.use(cors({ origin: '*', credentials: true, }))
+//enables cors
+app.use(cors({
+    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'exposedHeaders': ['sessionId'],
+    'origin': '*',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false
+  }));
 
 
 app.use('/auth', AuthRouter)
