@@ -13,13 +13,17 @@ const app = express()
 const PORT = 8080 || process.env.PORT
 
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
-app.use(cors({ origin: '*', credentials: true, }))
+// Define the CORS options
+const corsOptions = {
+    credentials: true,
+    origin: [`http://localhost:${PORT}`,'http://localhost:80'] // Whitelist the domains you want to allow
+};
+app.use(cors(corsOptions))
 
 
 app.use('/auth', AuthRouter)
 app.use('/entries', EntriesRouter);
 app.use('/', swaggerDocs);
-
 
 
 const CONNECTION_URL = process.env.MONGODB_DATABASE_URL
