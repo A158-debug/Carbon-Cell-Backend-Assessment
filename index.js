@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const swaggerDocs = require('./swagger.js');
 const AuthRouter = require('./routes/auth.routes.js')
