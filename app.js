@@ -16,7 +16,7 @@ app.use(bodyParser.json({ limit: '50mb', extended: true }))
 // Define the CORS options
 const corsOptions = {
     credentials: true,
-    origin: [`http://localhost:${PORT}`,'http://localhost:80'] // Whitelist the domains you want to allow
+    origin: [`http://localhost:${PORT}`,'http://localhost:80','https://carbon-cell-backend-assessment-kqw6.onrender.com'] // Whitelist the domains you want to allow
 };
 app.use(cors(corsOptions))
 
